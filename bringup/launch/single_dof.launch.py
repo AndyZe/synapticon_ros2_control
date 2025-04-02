@@ -79,10 +79,13 @@ def generate_launch_description():
         condition=IfCondition(gui),
     )
 
-    joint_state_broadcaster_spawner = Node(
+    active_controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["joint_state_broadcaster"],
+        arguments=[
+            "joint_state_broadcaster",
+            "trident_brake_controller",
+        ],
     )
 
     inactive_controller_spawner = Node(
@@ -100,9 +103,9 @@ def generate_launch_description():
     )
 
     # Delay rviz start after `joint_state_broadcaster`
-    delay_rviz_after_joint_state_broadcaster_spawner = RegisterEventHandler(
+    delay_rviz_after_active_controller_spawner = RegisterEventHandler(
         event_handler=OnProcessExit(
-            target_action=joint_state_broadcaster_spawner,
+            target_action=active_controller_spawner,
             on_exit=[rviz_node],
         )
     )
@@ -113,7 +116,7 @@ def generate_launch_description():
         RegisterEventHandler(
             event_handler=OnProcessExit(
                 target_action=inactive_controller_spawner,
-                on_exit=[joint_state_broadcaster_spawner],
+                on_exit=[active_controller_spawner],
             )
         )
     )
@@ -121,7 +124,7 @@ def generate_launch_description():
     nodes = [
         robot_state_pub_node,
         inactive_controller_spawner,
-        delay_rviz_after_joint_state_broadcaster_spawner,
+        delay_rviz_after_active_controller_spawner,
         delay_joint_state_broadcaster_after_inactive_controller_spawner,
     ]
 

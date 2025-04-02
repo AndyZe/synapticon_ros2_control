@@ -5,6 +5,9 @@ controller_manager:
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
+    trident_brake_controller:
+      type: gpio_controllers/GpioCommandController
+
 forward_torque_controller:
   ros__parameters:
     type: forward_command_controller/ForwardCommandController
@@ -32,3 +35,12 @@ quick_stop_controller:
     joints:
       - joint1
     interface_name: quick_stop
+
+trident_brake_controller:
+  ros__parameters:
+    gpios:
+      - trident_brake_gpio
+    command_interfaces:
+      trident_brake_gpio:
+        - interfaces:
+          - trident_brake_gpio.1

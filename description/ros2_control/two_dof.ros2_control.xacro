@@ -33,6 +33,11 @@
         <state_interface name="acceleration"/>
         <state_interface name="effort"/>
       </joint>
+
+      <gpio name="trident_brake_gpio">
+        <command_interface name="trident_brake_gpio.1"/>
+        <state_interface name="trident_brake_gpio.1"/>
+      </gpio>
     </ros2_control>
 
   </xacro:macro>
