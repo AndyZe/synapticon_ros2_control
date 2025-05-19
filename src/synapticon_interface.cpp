@@ -573,7 +573,9 @@ void SynapticonSystemInterface::somanetCyclicLoop(
           // state
           if ((in_somanet_1_[joint_idx]->Statusword & 0b0000000001001111) ==
               0b0000000000001000)
+          {
             out_somanet_1_[joint_idx]->Controlword = 0b10000000;
+          }
 
           // Shutdown: Switch on disabled -> Ready to switch on
           else if ((in_somanet_1_[joint_idx]->Statusword &
