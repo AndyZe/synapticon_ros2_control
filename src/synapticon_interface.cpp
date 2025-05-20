@@ -556,6 +556,11 @@ void SynapticonSystemInterface::somanetCyclicLoop(
 
       if (wkc_ >= expected_wkc_) {
         for (size_t joint_idx = 0; joint_idx < num_joints_; ++joint_idx) {
+          // If the drive has been halted, bit 10 of Statusword is set
+          if (in_somanet_1_[joint_idx]->Statusword & (1 << 10)) {
+            std::cerr << "Halted" << std::endl;
+          }
+
           if (first_iteration.at(joint_idx)) {
             // Default to PROFILE_TORQUE_MODE
             out_somanet_1_[joint_idx]->OpMode = PROFILE_TORQUE_MODE;
@@ -702,7 +707,7 @@ void SynapticonSystemInterface::somanetCyclicLoop(
         }
 
         // printf("Processdata cycle %4d , WKC %d ,", i, wkc);
-        // printf(" Statusword: %X ,", in_somanet_1->Statusword);
+        printf(" Statusword: %X ,", in_somanet_1_[0]->Statusword);
         // printf(" Op Mode Display: %d ,", in_somanet_1->OpModeDisplay);
         // printf(" ActualPos: %" PRId32 " ,\n", in_somanet_1_[0]->PositionValue);
         // printf(" DemandPos: %" PRId32 " ,",
@@ -711,7 +716,7 @@ void SynapticonSystemInterface::somanetCyclicLoop(
         // printf(" DemandVel: %" PRId32 " ,", in_somanet_1_[0]->VelocityDemandValue);
         // printf("ActualTorque: %" PRId32 " ,", in_somanet_1_[0]->TorqueValue);
         // printf(" DemandTorque: %" PRId32 " ,", in_somanet_1_[0]->TorqueDemand);
-        // printf("\n");
+        printf("\n");
 
         // printf(" T:%" PRId64 "\r", ec_DCtime);
         needlf_ = true;
