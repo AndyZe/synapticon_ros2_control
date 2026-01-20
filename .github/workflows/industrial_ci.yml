@@ -2,19 +2,23 @@ name: Industrial CI
 
 on:
   push:
-    branches: [ jazzy ]
+    branches: [ jazzy, rolling ]
   pull_request:
-    branches: [ jazzy ]
+    branches: [ jazzy, rolling ]
   workflow_dispatch:
 
 jobs:
   industrial_ci:
     strategy:
       matrix:
-        env:
-          - {ROS_DISTRO: jazzy, ROS_REPO: main}
+        ROS_DISTRO: [jazzy, rolling]
+        ROS_REPO: [main]
     runs-on: ubuntu-latest
+    # Only run jazzy tests on jazzy branch, and rolling tests on rolling branch
+    if: matrix.ROS_DISTRO == github.ref_name || github.event_name == 'workflow_dispatch'
     steps:
       - uses: actions/checkout@v4
       - uses: 'ros-industrial/industrial_ci@master'
-        env: ${{ matrix.env }}
+        env:
+          ROS_DISTRO: ${{ matrix.ROS_DISTRO }}
+          ROS_REPO: ${{ matrix.ROS_REPO }}
